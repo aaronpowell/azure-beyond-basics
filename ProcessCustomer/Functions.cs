@@ -15,6 +15,7 @@ namespace ProcessCustomer
     public static void ProcessQueueMessage([QueueTrigger("customerqueue")] string message, TextWriter log)
     {
       // processing + send email
+      throw new ApplicationException("ugh!!");
       log.WriteLine(message);
     }
   }
