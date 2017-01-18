@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Queue;
 using Microsoft.WindowsAzure.Storage.Table;
 
 namespace AzureBeyondBasics.Controllers
@@ -43,6 +44,19 @@ namespace AzureBeyondBasics.Controllers
 
       // Execute the insert operation.
       table.Execute(insertOperation);
+
+      // Create the queue client.
+      var queueClient = storageAccount.CreateCloudQueueClient();
+
+      // Retrieve a reference to a container.
+      var queue = queueClient.GetQueueReference("customerqueue");
+
+      // Create the queue if it doesn't already exist
+      queue.CreateIfNotExists();
+
+      // Create a message and add it to the queue.
+      var message = new CloudQueueMessage(customer.RowKey);
+      queue.AddMessage(message);
 
       return View(customer);
     }
